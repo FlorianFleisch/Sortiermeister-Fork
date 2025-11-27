@@ -6,31 +6,121 @@
     <link rel="stylesheet" href="../styles/style.css" />
   </head>
   <body>
+    <!-- Login Container -->
+    <div class="overlay" id="loginOverlay"></div>
+    <div class="containers" id="loginContainer" style="display: block;">
+      <div class="login-header">
+        <h1>SORTIERMEISTER</h1>
+        <p>Melde dich an und fordere die Herausforderung an!</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="playerName">Dein Name</label>
+          <input type="text" id="playerName" placeholder="Gib deinen Namen ein..." required>
+        </div>
+        
+        <div class="form-group">
+          <label for="algorithmSelect">Sortieralgorithmus</label>
+          <select id="algorithmSelect">
+            <option value="InsertionSort">Insertion Sort</option>
+            <option value="BubbleSort">Bubble Sort</option>
+            <option value="SelectionSort">Selection Sort</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Wähle deinen Schwierigkeitsgrad</label>
+          <div class="difficulty-buttons">
+            <button type="button" class="difficulty-btn" data-difficulty="Easy" data-speed="2000">
+              EASY
+            </button>
+            <button type="button" class="difficulty-btn" data-difficulty="Medium" data-speed="1000">
+              MEDIUM
+            </button>
+            <button type="button" class="difficulty-btn" data-difficulty="Hard" data-speed="450">
+              HARD
+            </button>
+            <button type="button" class="difficulty-btn" data-difficulty="SuperHard" data-speed="250">
+              SUPER HARD
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" id="startButton" disabled>
+          SPIEL STARTEN
+        </button>
+      </form>
+    </div>
+
+    <!-- Win/Lose Popup -->
     <div class="containers" id="popUpContainer">
-      <div class="popups win-popup" id="winPopup">DU HAST GEWONNEN</div>
-      <div class="popups lose-popup" id="losePopup">DU HAST VERLOREN</div>
-      <div id="closeButton" onclick="tryAgain()">CLOSE</div>
+      <div class="popups win-popup" id="winPopup">GEWONNEN</div>
+      <div class="popups lose-popup" id="losePopup">VERLOREN</div>
+      
+      <div class="replay-difficulty-buttons">
+        <p style="grid-column: 1 / -1; margin: 0; padding: 0; margin-bottom: 20px;">Nächste Runde?</p>
+        <button class="replay-difficulty-btn" data-difficulty="Easy" data-speed="2000">EASY</button>
+        <button class="replay-difficulty-btn" data-difficulty="Medium" data-speed="1000">MEDIUM</button>
+        <button class="replay-difficulty-btn" data-difficulty="Hard" data-speed="450">HARD</button>
+        <button class="replay-difficulty-btn" data-difficulty="SuperHard" data-speed="250">SUPER HARD</button>
+      </div>
+      
+      <div class="action-buttons">
+        <button id="playAgainSameDifficultyButton" onclick="playAgainSameDifficulty()">
+          NOCHMAL SPIELEN
+        </button>
+        <button id="showLeaderboardButton" onclick="showLeaderboardAfterGame()">
+          RANGLISTE
+        </button>
+      </div>
     </div>
     
-    <div class="overlay" id="overlay1"></div>
-    <div class="containers flex-container" id="buttonContainer">
-      <div class="title-container">
-        <h1 class="title">Sortiermeister</h1>
-        <p class="explanation">Sortiere die Zahlen in der richtigen Reihenfolge.</p>
+    <!-- Leaderboard Modal -->
+    <div class="overlay" id="leaderboardOverlay" style="display: none;"></div>
+    <div class="containers" id="leaderboardContainer" style="display: none; width: 900px; max-width: 95vw;">
+      <div>
+        <h2>RANGLISTE</h2>
+        <p>Die besten Sortiermeister aller Zeiten</p>
+        
+        <table class="leaderboard-table" id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>PLATZ</th>
+              <th>NAME</th>
+              <th>ZEIT</th>
+              <th>SCHWIERIGKEIT</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardContent"></tbody>
+        </table>
+        
+        <button onclick="closeLeaderboard()">SCHLIESSEN</button>
       </div>
-      <h3 class="difficulty-title">WÃ¤hle eine Schwierigkeit aus:</h3>
-      <button class="flex-items" id="easy-button" onclick="setSortSpeed(2000)">Easy</button>
-      <button class="flex-items" id="medium-button" onclick="setSortSpeed(1000)">Medium</button>
-      <button class="flex-items" id="hard-button" onclick="setSortSpeed(450)">Hard</button>
-      <button class="flex-items" id="superhard-button" onclick="setSortSpeed(250)">Super Hard</button>
     </div>
-    <div class="sorting-container">
+    
+    <!-- Player Info Display -->
+    <div id="playerInfo">
+      <p>Angemeldet als: <strong id="currentPlayerName"></strong></p>
+      <button onclick="logout()" style="background: linear-gradient(135deg, #ff0055 0%, #cc0033 100%); color: #fff;">
+        ABMELDEN
+      </button>
+      <button onclick="showLeaderboard()" style="background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color: #000;">
+        RANGLISTE
+      </button>
+    </div>
+
+    <!-- Sorting Game Container -->
+    <div class="sorting-container" id="gameContainer">
       <div class="sorting">
+        <p>COMPUTER</p>
         <div class="computer">
-          <p>Computer:</p>
+          <p style="grid-column: 1 / -1; text-align: center; margin-bottom: 10px;">Computer sortiert...</p>
         </div>
+        
+        <p style="margin-top: 20px;">SPIELER</p>
         <div class="human">
-          <p>Spieler:</p>
+          <p style="grid-column: 1 / -1; text-align: center; margin-bottom: 10px;">Klicke auf die Zahlen zum Tauschen!</p>
         </div>
       </div>
     </div>
